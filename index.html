@@ -10,10 +10,18 @@
     $(document).ready(()=> {
       $("button#getBankDetails").click(()=>{
         $.get("http://localhost:8080/get-bank-detail", (data, status) => {
-          console.log(data);
           const bankTitle = $("<h2 id=\"bank-name\"></h2>").text(data.bank);
-          
+          const bankAddress = $("<p></p>").text(data.address);
+          const accountNumber = $("<p></p>").text("The bank has " + data["clients-number"] + " clients.");
+
+          const michaelAccountButton = $("<button id='michael-account'></button>").text("Check Michael's Account");
           $("div.container").append(bankTitle);
+          $("div.container").append(bankAddress);
+          $("div.container").append(accountNumber);
+
+          if (data["clients-number"] > 0) {
+            $("div.container").append(michaelAccountButton);
+          }
         }) 
       })
     })
