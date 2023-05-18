@@ -46,6 +46,7 @@ const getMichaelAccounts = () => {
 
     const clientSummarySentence = $("<div id='client-summary'></div>").text(`${clientName} ${isVip} a VIP. ${clientName} has ${accountList.length} account${pluralAccount}.`);
 
+    $("div#client-container").remove();
     const clientContainer = $("<div id='client-container'></div>")
 
     clientContainer.append(clientSummarySentence);
@@ -55,8 +56,21 @@ const getMichaelAccounts = () => {
 
       for (account of accountList) {
         const accountItemId = account.currency + "-list-item"
-        const accountItem = $("<li class='account-list'></div>").text(`${account.currency}: ${account.amount}`);
+        const accountItem = $("<li class='account-list'><div></div></li>").text(`${account.currency}: ${account.amount}`);
         accountItem.attr('id', accountItemId);
+
+        const accountInput = $("<input type='number' min='0' step='100'></input>")
+        accountInput.attr('id', account.currency + "-input");
+
+        const addAmountButton = $("<button></button>").text("Add");
+        addAmountButton.attr('id', account.currency + "-add");
+
+        const reduceAmountButton = $("<button></button>").text("Reduce");
+        reduceAmountButton.attr('id', account.currency + "-reduce");
+
+        accountItem.append(accountInput);
+        accountItem.append(addAmountButton);
+        accountItem.append(reduceAmountButton);
         accountContainer.append(accountItem);
       }
       clientContainer.append(accountContainer);
