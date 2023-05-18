@@ -9,7 +9,13 @@
   <script>
     $(document).ready(()=> {
       $("button#getBankDetails").click(()=>{
-        $.get("http://localhost:8080/get-bank-detail", (data, status) => {
+        $.ajax({
+          url: "http://localhost:8080/get-bank-detail",
+        })
+        .always((data, status)=> {
+          console.log(status);
+        })
+        .done((data, status)=> {
           const bankTitle = $("<h2 id=\"bank-name\"></h2>").text(data.bank);
           const bankAddress = $("<p></p>").text(data.address);
           const accountNumber = $("<p></p>").text("The bank has " + data["clients-number"] + " clients.");
@@ -22,7 +28,13 @@
           if (data["clients-number"] > 0) {
             $("div.container").append(michaelAccountButton);
           }
-        }) 
+        })
+        .fail((data, status)=> {
+          const failHeading = $("<h2 id=\"bank-name\"></h2>").text("Failed to get data");
+          const errorMessage = $("<p></p>").text(status);
+          $("div.container").append(failHeading);
+          $("div.container").append(errorMessage);
+        })
       })
     })
   </script>
