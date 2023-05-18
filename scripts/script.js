@@ -1,3 +1,5 @@
+const baseUri = "http://localhost:8080";
+
 const sucessGetBankData = (data) => {
   const bankTitle = $("<h2 id=\"bank-name\"></h2>").text(data.bank);
   const bankAddress = $("<p></p>").text(data.address);
@@ -12,6 +14,9 @@ const sucessGetBankData = (data) => {
 
   if (data["clients-number"] > 0) {
     bankDetailsContainer.append(michaelAccountButton);
+    michaelAccountButton.click(()=> {
+      getMichaelAccounts();
+    })
   }
 
   $("div.container").empty();
@@ -25,10 +30,45 @@ const failedGetBankData = (status) => {
     $("div.container").append(errorMessage);
 }
 
+const getMichaelAccounts = () => {
+  $.ajax({
+    url: baseUri + "/client/Michael"
+  })
+  .always((data, status) => {
+    console.log(data);
+  })
+  .done((data, status) => {
+    const clientName = data.name;
+    const numberOfAccounts = data.numberOfAccounts;
+    const isVip = data.vip ? "is" : "is not";
+    const accountList = data.accounts;
+    const pluralAccount = numberOfAccounts > 1 ? "s" : "";
+
+    const clientSummarySentence = $("<div id='client-summary'></div>").text(`${clientName} ${isVip} a VIP. ${clientName} has ${accountList.length} account${pluralAccount}.`);
+
+    const clientContainer = $("<div id='client-container'></div>")
+
+    clientContainer.append(clientSummarySentence);
+    
+    if (numberOfAccounts > 0) {
+      const accountContainer = $("<ul id='account-wrapper'></ul>")
+
+      for (account of accountList) {
+        const accountItemId = account.currency + "-list-item"
+        const accountItem = $("<li class='account-list'></div>").text(`${account.currency}: ${account.amount}`);
+        accountItem.attr('id', accountItemId);
+        accountContainer.append(accountItem);
+      }
+      clientContainer.append(accountContainer);
+    }
+    $("div.container").append(clientContainer);
+  })
+} 
+
 $(document).ready(()=> {
   $("button#getBankDetails").click(()=>{
     $.ajax({
-      url: "http://localhost:8080/get-bank-detail",
+      url: baseUri + "/get-bank-detail",
     })
     .always((data, status)=> {
       console.log(status);
@@ -42,3 +82,4 @@ $(document).ready(()=> {
     })
   })
 })
+
