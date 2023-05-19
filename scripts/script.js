@@ -116,6 +116,10 @@ const displayClient = (data) => {
   $("div.container").append(clientContainer);
 }
 
+const addEventHandlerToInput = (event) => {
+
+}
+
 const changeAmount = (clientName, currency, amount, action) => {
   if (isNaN(amount)) {
     return;
@@ -166,21 +170,33 @@ const getAccount = (accountName) => {
   })
 }
 
+const callBankDetails = () => {
+  $.ajax({
+    url: baseUri + "/get-bank-detail",
+  })
+  .always((data, status)=> {
+    console.log(status);
+  })
+  .done((data, status) => {
+    sucessGetBankData(data);
+  }
+  )
+  .fail((data, status)=> {
+    failedGetBankData(status);
+  })
+}
+  
+
 $(document).ready(()=> {
   $("button#getBankDetails").click(()=>{
-    $.ajax({
-      url: baseUri + "/get-bank-detail",
-    })
-    .always((data, status)=> {
-      console.log(status);
-    })
-    .done((data, status) => {
-      sucessGetBankData(data);
-    }
-    )
-    .fail((data, status)=> {
-      failedGetBankData(status);
-    })
+    callBankDetails();
   })
+  $("div").on("focus", "input", (event) => {
+    $(event.currentTarget).css("background-color", "beige");
+  });
+  $("div").on("blur", "input", (event) => {
+    $(event.currentTarget).css("background-color", "white");
+  });
+
 })
 
