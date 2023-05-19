@@ -6,21 +6,51 @@ const sucessGetBankData = (data) => {
   const accountNumber = $("<p></p>").text("The bank has " + data["clients-number"] + " clients.");
   const bankDetailsContainer = $("<div id='bank-detail-container'></div>")
 
-  const michaelAccountButton = $("<button id='michael-account'></button>").text("Check Michael's Account");
+  const showClientListBtn = $("<button id='show-clients'></button>").text("Show all clients");
   
   bankDetailsContainer.append(bankTitle);
   bankDetailsContainer.append(bankAddress);
   bankDetailsContainer.append(accountNumber);
+  
 
   if (data["clients-number"] > 0) {
-    bankDetailsContainer.append(michaelAccountButton);
-    michaelAccountButton.click(()=> {
-      getMichaelAccounts();
+    bankDetailsContainer.append(showClientListBtn);
+    showClientListBtn.click(()=> {
+      getAllClients();
     })
   }
 
   $("div.container").empty();
   $("div.container").append(bankDetailsContainer);
+}
+
+const getAllClients = () => {
+  $.ajax({
+    url: baseUri + "/get-all-clients"
+  })
+  .always((data, status) => {
+    console.log(data);
+  })
+  .done((data, status) => {
+    generateClientButtons(data);
+  })
+}
+
+const generateClientButtons = (data) => {
+  $("div#client-buttons-container").remove();
+  const clientButtonContainer = $("<div id='client-buttons-container'></div>");
+  for (let i = 0; i < data.length; i++) {
+    const cliName = data[i];
+    const clientBtn = $("<button></button>").text("Check " + cliName + "'s Account");
+    clientBtn.attr('id', cliName + "-btn");
+    clientBtn.click(()=> {
+      getAccount(cliName);
+    })
+
+    clientButtonContainer.append(clientBtn)
+  }
+  $("div.container").append(clientButtonContainer);
+
 }
 
 const failedGetBankData = (status) => {
@@ -114,12 +144,12 @@ const changeAmount = (clientName, currency, amount, action) => {
     console.log(status);
   })
   .done((data, status) => {
-    getMichaelAccounts();
+    console.log(data)
+    getAccount(clientName);
   })
 }
 
-const getMichaelAccounts = () => {
-  const accountName = "Michael"
+const getAccount = (accountName) => {
   $.ajax({
     url: baseUri + "/client/" + accountName
   })
@@ -129,7 +159,7 @@ const getMichaelAccounts = () => {
   .done((data, status) => {
     displayClient(data);
   })
-} 
+}
 
 $(document).ready(()=> {
   $("button#getBankDetails").click(()=>{
