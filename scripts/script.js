@@ -75,6 +75,8 @@ const displayClient = (data) => {
   clientContainer.append(clientSummarySentence);
   
   if (numberOfAccounts > 0) {
+
+    //TODO: refactor this section to another function
     const accountContainer = $("<ul id='account-wrapper'></ul>")
 
     for (account of accountList) {
@@ -98,7 +100,6 @@ const displayClient = (data) => {
       reduceAmountButton.click(() => {
         const amount = parseInt($("#"+inputFieldID).val());
         changeAmount(clientName, inputFieldID.split("-")[0], amount, "withdraw")
-
       })
 
       accountItem.append(accountInput);
@@ -107,6 +108,8 @@ const displayClient = (data) => {
       accountContainer.append(accountItem);
     }
     clientContainer.append(accountContainer);
+    accountContainer.hide();
+    accountContainer.fadeIn("slow");
   }
   $("div.container").append(clientContainer);
 }
