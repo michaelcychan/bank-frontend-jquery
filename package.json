@@ -1,0 +1,14 @@
+{
+  "name": "bank-frontend-jquery",
+  "version": "1.0.0",
+  "description": "a small exercise of jQuery",
+  "main": "index.html",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Michael C.",
+  "license": "ISC",
+  "devDependencies": {
+    "reload": "^3.2.1"
+  }
+}

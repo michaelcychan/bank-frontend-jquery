@@ -49,6 +49,8 @@ const generateClientButtons = (data) => {
 
     clientButtonContainer.append(clientBtn)
   }
+  $("div#client-container").remove();
+
   $("div.container").append(clientButtonContainer);
 
 }
